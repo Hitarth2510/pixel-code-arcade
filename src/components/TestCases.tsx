@@ -83,7 +83,7 @@ const TestCases: React.FC<TestCasesProps> = ({
                 }`}
                 onClick={() => handleSelectCase(test.id)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center">
                     {test.running ? (
                       <PlayCircle className="h-4 w-4 text-arcade-blue animate-pulse mr-2" />
@@ -94,18 +94,13 @@ const TestCases: React.FC<TestCasesProps> = ({
                     ) : (
                       <XCircle className="h-4 w-4 text-red-500 mr-2" />
                     )}
-                    <span className="text-sm">Case {test.id}</span>
+                    <span className="text-sm">Test Case {test.id}</span>
                   </div>
-                  
-                  <button
-                    className="text-[10px] arcade-font text-arcade-neon hover:text-arcade-pink"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRunTestCase(test.id);
-                    }}
-                  >
-                    Run
-                  </button>
+                </div>
+                
+                <div className="bg-black/30 p-2 rounded text-xs overflow-x-auto">
+                  <span className="text-arcade-neon/80">Input: </span>
+                  <span className="font-mono">{test.input}</span>
                 </div>
               </div>
             ))}

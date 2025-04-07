@@ -190,6 +190,12 @@ const IDEPage: React.FC = () => {
     toast.info(`Switched to problem: ${problem.title}`);
     // In a real app, we'd fetch the problem data and test cases
   };
+
+  // Submit solution
+  const handleSubmitSolution = () => {
+    toast.info("Submitting your solution...");
+    runAllTestCases();
+  };
   
   return (
     <div className="min-h-screen bg-arcade-dark flex flex-col">
@@ -198,6 +204,7 @@ const IDEPage: React.FC = () => {
       
       <header className="border-b border-arcade-neon flex items-center justify-between p-4">
         <h1 className="arcade-font text-lg text-arcade-neon animate-glow">PIXEL CODE ARCADE</h1>
+        <h2 className="arcade-font text-center text-arcade-neon animate-pulse">PYTHON CODING CHALLENGE 4.0</h2>
         <div className="flex-1 mx-4">
           <Timer initialTime={3600} onTimeEnd={handleTimeEnd} />
         </div>
@@ -208,8 +215,12 @@ const IDEPage: React.FC = () => {
           >
             Problems
           </button>
-          <button className="pixel-button text-[10px] py-1">Leaderboard</button>
-          <button className="pixel-button text-[10px] py-1">Settings</button>
+          <button 
+            className="pixel-button text-[10px] py-1 bg-arcade-neon/20 hover:bg-arcade-neon/40"
+            onClick={handleSubmitSolution}
+          >
+            Submit
+          </button>
         </div>
       </header>
       
