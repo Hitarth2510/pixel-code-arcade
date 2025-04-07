@@ -5,6 +5,12 @@ import ProblemDescription from '@/components/ProblemDescription';
 import CodeEditor from '@/components/CodeEditor';
 import TestCases from '@/components/TestCases';
 import { Trophy } from 'lucide-react';
+import { 
+  ResizablePanelGroup, 
+  ResizablePanel, 
+  ResizableHandle 
+} from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const initialCode = `def two_sum(nums, target):
     # Write your solution here
@@ -72,10 +78,8 @@ const IDEPage: React.FC = () => {
   
   // Mock function to simulate running code
   const runCode = (code: string) => {
-    // In a real application, you'd send this code to a backend for execution
     toast.info("Executing code...");
     
-    // For this example, we'll just pretend to run the code
     setTimeout(() => {
       toast.success("Code executed successfully!");
     }, 1000);
@@ -151,7 +155,7 @@ const IDEPage: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-arcade-dark flex flex-col relative">
+    <div className="min-h-screen bg-arcade-dark flex flex-col">
       {/* Scanlines effect */}
       <div className="scanlines absolute inset-0 pointer-events-none"></div>
       
@@ -164,28 +168,47 @@ const IDEPage: React.FC = () => {
         </div>
       </header>
       
-      <main className="flex-grow flex flex-col md:flex-row overflow-hidden">
-        {/* Three panel layout */}
-        <div className="w-full md:w-1/3 h-[400px] md:h-auto overflow-y-auto arcade-panel m-3">
-          <ProblemDescription {...problemData} />
-        </div>
-        
-        <div className="w-full md:w-1/3 h-[400px] md:h-auto arcade-panel m-3">
-          <CodeEditor
-            initialCode={initialCode}
-            language="python"
-            onRunCode={runCode}
-            onResetCode={resetCode}
-          />
-        </div>
-        
-        <div className="w-full md:w-1/3 h-[400px] md:h-auto arcade-panel m-3">
-          <TestCases
-            testCases={testCases}
-            onRunTestCase={runTestCase}
-            onRunAllTestCases={runAllTestCases}
-          />
-        </div>
+      <main className="flex-grow overflow-hidden">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="min-h-[calc(100vh-60px)]"
+        >
+          {/* Problem Description Panel */}
+          <ResizablePanel defaultSize={30} minSize={20} className="arcade-panel-resizable">
+            <div className="h-full p-1">
+              <ScrollArea className="h-full rounded-md">
+                <ProblemDescription {...problemData} />
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+          
+          <ResizableHandle withHandle className="bg-arcade-neon/20" />
+          
+          {/* Code Editor Panel */}
+          <ResizablePanel defaultSize={40} minSize={30} className="arcade-panel-resizable">
+            <div className="h-full p-1">
+              <CodeEditor
+                initialCode={initialCode}
+                language="python"
+                onRunCode={runCode}
+                onResetCode={resetCode}
+              />
+            </div>
+          </ResizablePanel>
+          
+          <ResizableHandle withHandle className="bg-arcade-neon/20" />
+          
+          {/* Test Cases Panel */}
+          <ResizablePanel defaultSize={30} minSize={20} className="arcade-panel-resizable">
+            <div className="h-full p-1">
+              <TestCases
+                testCases={testCases}
+                onRunTestCase={runTestCase}
+                onRunAllTestCases={runAllTestCases}
+              />
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </main>
       
       {showSuccess && (

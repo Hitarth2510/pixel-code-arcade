@@ -107,4 +107,44 @@
     @apply bg-arcade-darker border border-arcade-neon rounded-md shadow-lg overflow-hidden p-4;
     box-shadow: 0 0 15px rgba(51, 195, 240, 0.3);
   }
+  
+  .arcade-panel-resizable {
+    @apply bg-arcade-darker shadow-lg overflow-hidden;
+    box-shadow: 0 0 15px rgba(51, 195, 240, 0.3);
+  }
+}
+
+/* Resizable panel styling */
+[data-panel-group-direction="horizontal"] > [data-panel] + [data-panel-resize-handle] {
+  @apply border-l border-arcade-neon/20;
+}
+
+[data-panel-group-direction="vertical"] > [data-panel] + [data-panel-resize-handle] {
+  @apply border-t border-arcade-neon/20;
+}
+
+[data-panel-resize-handle]:hover {
+  @apply bg-arcade-neon/30;
+}
+
+[data-panel-resize-handle][data-resize-active] {
+  @apply bg-arcade-neon/40;
+}
+
+/* Custom scrollbar for arcade theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-arcade-darker/70;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-arcade-neon/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-arcade-neon/50;
 }

@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, XCircle, PlayCircle } from 'lucide-react';
+import { CheckCircle, XCircle, PlayCircle, Code, ListChecks } from 'lucide-react';
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TestCase {
   id: number;
@@ -24,37 +26,42 @@ const TestCases: React.FC<TestCasesProps> = ({
   onRunAllTestCases,
 }) => {
   const [activeTab, setActiveTab] = useState<'testcases' | 'output'>('testcases');
-  const [selectedCase, setSelectedCase] = useState<number | null>(null);
+  const [selectedCase, setSelectedCase] = useState<number | null>(testCases[0]?.id || null);
   
   const handleSelectCase = (id: number) => {
     setSelectedCase(id);
+    if (activeTab !== 'output') {
+      setActiveTab('output');
+    }
   };
   
   const passedCount = testCases.filter(tc => tc.passed).length;
   const totalCount = testCases.length;
   
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center space-x-4 p-3 border-b border-arcade-neon/30">
+    <div className="h-full flex flex-col border border-arcade-neon/30 rounded-md overflow-hidden">
+      <div className="flex items-center bg-arcade-darker p-3 border-b border-arcade-neon/30">
         <button
-          className={`text-xs arcade-font ${activeTab === 'testcases' ? 'text-arcade-neon' : 'text-gray-400'}`}
+          className={`flex items-center mr-4 ${activeTab === 'testcases' ? 'text-arcade-neon' : 'text-gray-400'}`}
           onClick={() => setActiveTab('testcases')}
         >
-          Test Cases
+          <ListChecks className="h-4 w-4 mr-2" />
+          <span className="text-xs arcade-font">Test Cases</span>
         </button>
         <button
-          className={`text-xs arcade-font ${activeTab === 'output' ? 'text-arcade-neon' : 'text-gray-400'}`}
+          className={`flex items-center ${activeTab === 'output' ? 'text-arcade-neon' : 'text-gray-400'}`}
           onClick={() => setActiveTab('output')}
         >
-          Output
+          <Code className="h-4 w-4 mr-2" />
+          <span className="text-xs arcade-font">Output</span>
         </button>
       </div>
       
       {activeTab === 'testcases' && (
         <div className="flex flex-col h-full">
-          <div className="p-3 border-b border-arcade-neon/30">
+          <div className="p-3 border-b border-arcade-neon/30 bg-arcade-dark/50">
             <button
-              className="text-xs arcade-font text-arcade-purple hover:text-arcade-pink"
+              className="pixel-button text-[10px] py-1 arcade-font text-arcade-purple hover:text-arcade-pink"
               onClick={onRunAllTestCases}
             >
               Run All Tests
@@ -67,7 +74,7 @@ const TestCases: React.FC<TestCasesProps> = ({
             </div>
           </div>
           
-          <div className="flex-1 overflow-y-auto">
+          <ScrollArea className="flex-1">
             {testCases.map((test) => (
               <div
                 key={test.id}
@@ -102,39 +109,52 @@ const TestCases: React.FC<TestCasesProps> = ({
                 </div>
               </div>
             ))}
-          </div>
+          </ScrollArea>
         </div>
       )}
       
       {activeTab === 'output' && selectedCase !== null && (
-        <div className="flex-1 p-3 overflow-y-auto">
+        <ScrollArea className="flex-1 p-3">
           {testCases.find(t => t.id === selectedCase) && (
             <div>
-              <div className="mb-3">
+              <Card className="mb-3 bg-arcade-dark border-arcade-neon/30 p-3">
                 <h4 className="text-xs text-arcade-neon mb-1">Input:</h4>
-                <pre className="bg-black/30 p-2 rounded text-xs overflow-x-auto">
+                <pre className="bg-black/30 p-2 rounded mt-1 text-xs overflow-x-auto">
                   {testCases.find(t => t.id === selectedCase)?.input}
                 </pre>
-              </div>
+              </Card>
               
-              <div className="mb-3">
+              <Card className="mb-3 bg-arcade-dark border-arcade-neon/30 p-3">
                 <h4 className="text-xs text-arcade-neon mb-1">Expected Output:</h4>
-                <pre className="bg-black/30 p-2 rounded text-xs overflow-x-auto">
+                <pre className="bg-black/30 p-2 rounded mt-1 text-xs overflow-x-auto">
                   {testCases.find(t => t.id === selectedCase)?.expectedOutput}
                 </pre>
-              </div>
+              </Card>
               
               {testCases.find(t => t.id === selectedCase)?.actualOutput !== undefined && (
-                <div>
+                <Card className="bg-arcade-dark border-arcade-neon/30 p-3">
                   <h4 className="text-xs text-arcade-neon mb-1">Your Output:</h4>
-                  <pre className="bg-black/30 p-2 rounded text-xs overflow-x-auto">
+                  <pre className="bg-black/30 p-2 rounded mt-1 text-xs overflow-x-auto">
                     {testCases.find(t => t.id === selectedCase)?.actualOutput}
                   </pre>
-                </div>
+                  
+                  <div className="mt-3 flex items-center">
+                    <span className="text-xs mr-2">Status:</span>
+                    {testCases.find(t => t.id === selectedCase)?.passed ? (
+                      <span className="text-xs text-green-500 flex items-center">
+                        <CheckCircle className="h-3 w-3 mr-1" /> Passed
+                      </span>
+                    ) : (
+                      <span className="text-xs text-red-500 flex items-center">
+                        <XCircle className="h-3 w-3 mr-1" /> Failed
+                      </span>
+                    )}
+                  </div>
+                </Card>
               )}
             </div>
           )}
-        </div>
+        </ScrollArea>
       )}
     </div>
   );
