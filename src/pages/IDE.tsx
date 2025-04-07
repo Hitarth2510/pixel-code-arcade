@@ -89,9 +89,12 @@ const IDEPage: React.FC = () => {
     
     // Simulate test run with a timeout
     setTimeout(() => {
+      // Find the current test case we're working with
+      const currentTestCase = testCases.find(tc => tc.id === id);
+      
       // For demo, let's assume the first two cases pass and others fail
       const passed = id <= 2;
-      const actualOutput = passed ? tc.expectedOutput : "[0,0]";
+      const actualOutput = passed ? currentTestCase?.expectedOutput : "[0,0]";
       
       setTestCases(prev => prev.map(tc => 
         tc.id === id ? { 
