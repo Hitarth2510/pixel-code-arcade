@@ -1,9 +1,12 @@
 
 import React, { useState } from 'react';
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import ProblemDescription from '@/components/ProblemDescription';
 import CodeEditor from '@/components/CodeEditor';
 import TestCases from '@/components/TestCases';
+import ProblemsList, { Problem } from '@/components/ProblemsList';
+import Timer from '@/components/Timer';
 import { Trophy } from 'lucide-react';
 import { 
   ResizablePanelGroup, 
@@ -12,13 +15,21 @@ import {
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const initialCode = `def two_sum(nums, target):
-    # Write your solution here
-    pass
+// Problem data array
+const problems: Problem[] = [
+  { id: 1, title: "Two Sum", difficulty: "Easy" },
+  { id: 2, title: "Add Two Numbers", difficulty: "Medium" },
+  { id: 3, title: "Longest Substring Without Repeating Characters", difficulty: "Medium" },
+  { id: 4, title: "Median of Two Sorted Arrays", difficulty: "Hard" },
+  { id: 5, title: "Longest Palindromic Substring", difficulty: "Medium" },
+  { id: 6, title: "Regular Expression Matching", difficulty: "Hard" },
+  { id: 7, title: "Container With Most Water", difficulty: "Medium" },
+  { id: 8, title: "Integer to Roman", difficulty: "Medium" },
+  { id: 9, title: "Roman to Integer", difficulty: "Easy" },
+  { id: 10, title: "Longest Common Prefix", difficulty: "Easy" }
+];
 
-# Example usage:
-# two_sum([2, 7, 11, 15], 9) should return [0, 1]`;
-
+// Sample problem data
 const problemData = {
   title: "Two Sum",
   difficulty: "Easy" as const,
@@ -49,6 +60,7 @@ const problemData = {
   ]
 };
 
+// Test cases
 const initialTestCases = [
   {
     id: 1,
@@ -72,9 +84,19 @@ const initialTestCases = [
   }
 ];
 
+const initialCode = `def two_sum(nums, target):
+    # Write your solution here
+    pass
+
+# Example usage:
+# two_sum([2, 7, 11, 15], 9) should return [0, 1]`;
+
 const IDEPage: React.FC = () => {
+  const navigate = useNavigate();
   const [testCases, setTestCases] = useState(initialTestCases);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [currentProblem, setCurrentProblem] = useState(problems[0]);
+  const [showProblems, setShowProblems] = useState(false);
   
   // Mock function to simulate running code
   const runCode = (code: string) => {
@@ -153,6 +175,21 @@ const IDEPage: React.FC = () => {
     setTestCases(initialTestCases);
     toast.info("Code reset!");
   };
+
+  // Timer end handler
+  const handleTimeEnd = () => {
+    toast.warning("Time's up! Your session has ended.");
+    setTimeout(() => {
+      navigate('/');
+    }, 3000);
+  };
+  
+  // Select problem handler
+  const handleSelectProblem = (problem: Problem) => {
+    setCurrentProblem(problem);
+    toast.info(`Switched to problem: ${problem.title}`);
+    // In a real app, we'd fetch the problem data and test cases
+  };
   
   return (
     <div className="min-h-screen bg-arcade-dark flex flex-col">
@@ -161,8 +198,16 @@ const IDEPage: React.FC = () => {
       
       <header className="border-b border-arcade-neon flex items-center justify-between p-4">
         <h1 className="arcade-font text-lg text-arcade-neon animate-glow">PIXEL CODE ARCADE</h1>
+        <div className="flex-1 mx-4">
+          <Timer initialTime={3600} onTimeEnd={handleTimeEnd} />
+        </div>
         <div className="flex space-x-2">
-          <button className="pixel-button text-[10px] py-1">Problems</button>
+          <button 
+            className="pixel-button text-[10px] py-1"
+            onClick={() => setShowProblems(true)}
+          >
+            Problems
+          </button>
           <button className="pixel-button text-[10px] py-1">Leaderboard</button>
           <button className="pixel-button text-[10px] py-1">Settings</button>
         </div>
@@ -210,6 +255,31 @@ const IDEPage: React.FC = () => {
           </ResizablePanel>
         </ResizablePanelGroup>
       </main>
+      
+      {/* Problem selection modal */}
+      {showProblems && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-40 p-4">
+          <div className="w-full max-w-xl">
+            <ProblemsList 
+              problems={problems} 
+              onSelectProblem={(problem) => {
+                handleSelectProblem(problem);
+                setShowProblems(false);
+              }}
+              currentProblemId={currentProblem.id}
+            />
+            
+            <div className="mt-4 flex justify-center">
+              <button 
+                onClick={() => setShowProblems(false)}
+                className="pixel-button"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {showSuccess && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">

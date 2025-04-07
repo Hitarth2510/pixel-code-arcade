@@ -1,9 +1,34 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Gamepad } from 'lucide-react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Gamepad, Key, Lock } from 'lucide-react';
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+
+const CORRECT_PASSCODE = "arcade123"; // In a real app, this would be stored securely
 
 const Index = () => {
+  const [passcode, setPasscode] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePasscodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    setIsSubmitting(true);
+    
+    // Simple timeout to simulate verification
+    setTimeout(() => {
+      if (passcode === CORRECT_PASSCODE) {
+        toast.success("Access granted!");
+        navigate('/ide');
+      } else {
+        toast.error("Invalid passcode. Please try again.");
+      }
+      setIsSubmitting(false);
+    }, 800);
+  };
+
   return (
     <div className="min-h-screen bg-arcade-dark flex items-center justify-center relative overflow-hidden">
       {/* Scanlines effect */}
@@ -19,27 +44,53 @@ const Index = () => {
         </h1>
         
         <p className="text-xl mb-8 max-w-2xl mx-auto text-arcade-text">
-          Welcome to the Python Coding Competition IDE. Test your coding skills with retro arcade style!
+          Enter the secure passcode to access the Python Coding Competition IDE.
         </p>
         
-        <Link to="/ide" className="pixel-button inline-block">
-          ENTER THE ARCADE
-        </Link>
+        <form onSubmit={handlePasscodeSubmit} className="max-w-sm mx-auto mb-8">
+          <div className="arcade-panel p-4 flex flex-col gap-4">
+            <div className="flex items-center gap-3 mb-2">
+              <Lock className="h-5 w-5 text-arcade-neon" />
+              <span className="arcade-font text-sm text-arcade-neon">ENTER PASSCODE</span>
+            </div>
+            
+            <div className="relative">
+              <Input
+                type="password"
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                placeholder="* * * * * *"
+                className="bg-arcade-darker border-arcade-neon/30 text-arcade-text font-mono text-center tracking-widest"
+                maxLength={20}
+                required
+              />
+              <Key className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-arcade-neon/50" />
+            </div>
+            
+            <button 
+              type="submit" 
+              className="pixel-button mt-2"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "VERIFYING..." : "UNLOCK ARCADE"}
+            </button>
+          </div>
+        </form>
         
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="arcade-panel p-6">
-            <h3 className="arcade-font text-arcade-pink mb-3">Compete</h3>
-            <p className="text-sm">Solve coding challenges and compete with other programmers</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+          <div className="arcade-panel p-4">
+            <h3 className="arcade-font text-arcade-pink mb-2 text-sm">COMPETE</h3>
+            <p className="text-xs">Solve challenges against the clock</p>
           </div>
           
-          <div className="arcade-panel p-6">
-            <h3 className="arcade-font text-arcade-neon mb-3">Learn</h3>
-            <p className="text-sm">Improve your Python and algorithm skills with each challenge</p>
+          <div className="arcade-panel p-4">
+            <h3 className="arcade-font text-arcade-neon mb-2 text-sm">LEARN</h3>
+            <p className="text-xs">Improve Python skills with each problem</p>
           </div>
           
-          <div className="arcade-panel p-6">
-            <h3 className="arcade-font text-arcade-purple mb-3">Win</h3>
-            <p className="text-sm">Earn points and climb the global leaderboard</p>
+          <div className="arcade-panel p-4">
+            <h3 className="arcade-font text-arcade-purple mb-2 text-sm">WIN</h3>
+            <p className="text-xs">Earn points and top the leaderboard</p>
           </div>
         </div>
       </div>
