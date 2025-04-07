@@ -60,14 +60,7 @@ const TestCases: React.FC<TestCasesProps> = ({
       {activeTab === 'testcases' && (
         <div className="flex flex-col h-full">
           <div className="p-3 border-b border-arcade-neon/30 bg-arcade-dark/50">
-            <button
-              className="pixel-button text-[10px] py-1 arcade-font text-arcade-purple hover:text-arcade-pink"
-              onClick={onRunAllTestCases}
-            >
-              Run All Tests
-            </button>
-            
-            <div className="mt-3 text-xs">
+            <div className="text-xs">
               <span className="text-arcade-text">
                 {passedCount}/{totalCount} passing
               </span>

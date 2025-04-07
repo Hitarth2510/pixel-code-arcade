@@ -40,7 +40,7 @@ const Index = () => {
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold mb-6 arcade-font text-arcade-neon animate-glow">
-          PIXEL CODE ARCADE
+          PYTHON CODING CHALLENGE 4.0
         </h1>
         
         <p className="text-xl mb-8 max-w-2xl mx-auto text-arcade-text">
@@ -72,7 +72,7 @@ const Index = () => {
               className="pixel-button mt-2"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "VERIFYING..." : "UNLOCK ARCADE"}
+              {isSubmitting ? "VERIFYING..." : "UNLOCK CHALLENGE"}
             </button>
           </div>
         </form>

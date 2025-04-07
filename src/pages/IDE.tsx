@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -202,13 +201,14 @@ const IDEPage: React.FC = () => {
       {/* Scanlines effect */}
       <div className="scanlines absolute inset-0 pointer-events-none"></div>
       
-      <header className="border-b border-arcade-neon flex items-center justify-between p-4">
-        <h1 className="arcade-font text-lg text-arcade-neon animate-glow">PIXEL CODE ARCADE</h1>
-        <h2 className="arcade-font text-center text-arcade-neon animate-pulse">PYTHON CODING CHALLENGE 4.0</h2>
-        <div className="flex-1 mx-4">
+      <header className="border-b border-arcade-neon flex items-center p-4">
+        <div className="w-1/4">
           <Timer initialTime={3600} onTimeEnd={handleTimeEnd} />
         </div>
-        <div className="flex space-x-2">
+        <h1 className="arcade-font text-xl text-center text-arcade-neon animate-pulse flex-1">
+          PYTHON CODING CHALLENGE 4.0
+        </h1>
+        <div className="w-1/4 flex justify-end space-x-2">
           <button 
             className="pixel-button text-[10px] py-1"
             onClick={() => setShowProblems(true)}
